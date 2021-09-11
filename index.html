@@ -80,8 +80,23 @@
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yy = today.getFullYear()%100;
     today = yy+mm+dd;
-    bus_id.value = ( '00' + bus_id.value ).slice( -2 );
-    input_id.value = ( '00000' + input_id.value ).slice( -5 );
+
+	if( bus_id.value.indexOf('.') < 0 )
+	{
+      bus_id.value = ( '00' + bus_id.value ).slice( -2 );
+	}
+	else
+	{
+      bus_id.value = '00';
+	}
+	if( input_id.value.indexOf('.') < 0 )
+	{
+      input_id.value = ( '00000' + input_id.value ).slice( -5 );
+	}
+	else
+	{
+      input_id.value = '00000';
+	}
 
     abd_id.value = today + 'A' +bus_id.value+'-'+input_id.value;
     abd_btn.value = "腹部(A)：" + abd_id.value;
