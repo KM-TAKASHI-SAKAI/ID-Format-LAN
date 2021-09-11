@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html lang="ja">
-<meta charset="UTF-8">
 
 <head>
+<meta charset="UTF-8">
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='application-name' content='ID入力支援'/>
+<meta name='apple-mobile-web-app-title' content='ID入力支援'>
   <title>SONIMAGE HS1</title>
-  <base href="http://192.168.20.180:8123/">
   <style>
-  input {
-    font-size:35px;
-    margin:5px;
-    height:40px;
+  body{
+    font-size:40px
+    margin:0px;
+    padding:0px;
   }
-  </style>
+  input {
+    font-size:50px;
+    margin:0px;
+    padding:0px;
+    height:1.5em;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }  </style>
 </head>
 
-<body bgcolor="#303030" text="#cccccc" onmousedown="preventFocus(event);">
+<body bgcolor="#303030" text="#cccccc" tabindex="-1">
   <p>
     装置番号
-    <input type="number" id="bus_id" min="0" max="99" value='' style="width:80px" oninput="CreatePatientID();">
+    <input type="number" id="bus_id" min="0" max="99" value='' style="width:80px" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
   </p>
   <p>
     受付番号
-    <input type="number" id="input_id" min="0" max="99999" value='' style="width:150px;" oninput="CreatePatientID();">
-    <input type="button" id="clear_id" value="×" onmousedown="preventFocus();" style="width:50px;" onclick="input_id.value='';CreatePatientID();" tabindex="-1">
+    <input type="number" id="input_id" min="0" max="99999" value='' style="width:150px;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="button" id="clear_btn" value="×" style="width:50px;" tabindex="-1">
   </p>
   <p>
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
-      <input type="submit" id="abd_btn" value="腹部" onmousedown="preventFocus();" style="width:80px; height:70px; font-size:27px; background-color:deepskyblue;" tabindex="-1">
-      <input type="text" name="id" id="abd_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px;" oninput="CreatePatientID();" tabindex="-1">
+      <input type="submit" id="abd_btn" value="腹部(A)" style="width:5em;height:2em;background-color:deepskyblue;" tabindex="-1">
+      <input type="text" name="id" id="abd_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px;" oninput="CreatePatientID();" tabindex="-1" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
     </form>
 
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
-      <input type="submit" id="brest_btn" value="乳腺" onmousedown="preventFocus();" style="width:80px; height:70px;font-size:27px;background-color:lightcoral;" tabindex="-1">
-      <input type="text" name="id" id="brest_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px; oninput="CreatePatientID();" tabindex="-1">
+      <input type="submit" id="brest_btn" value="乳腺(B)" style="width:5em;height:2em;background-color:lightcoral;" tabindex="-1">
+      <input type="text" name="id" id="brest_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px; oninput="CreatePatientID();" tabindex="-1" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
     </form>
 
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
@@ -45,22 +54,11 @@
       </p>          
     </form>
     <HR>
-    IP Address <input type="text" id="ip_address" oninput="CreatePatientID();" style="font-size:16px;">
+    IP Address <input type="text" id="ip_address" oninput="CreatePatientID();" style="font-size:16px;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
 
   </p>
 
   <script>
-  function preventFocus(e) {
-    if( e && (e.srcElement.id == "bus_id" ||  e.srcElement.id == "input_id" ||  e.srcElement.id == "manual_id" ||  e.srcElement.id == "ip_address"))
-    {
-      e.stopPropagation();
-    }
-    else
-    {
-      var ae = document.activeElement;
-      setTimeout(function() { ae.focus() }, 1);
-    }
-  }
   function CreatePatientID() {
     // input要素を取得
     var bus_id = document.getElementById("bus_id");
@@ -80,17 +78,52 @@
     today = yy+mm+dd;
     bus_id.value = ( '00' + bus_id.value ).slice( -2 );
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
+
     abd_id.value = today + 'A' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
-    brest_id.value = today + 'B' +( '00000' + input_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    brest_id.value = today + 'B' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
     localStorage.setItem('bus_id', bus_id.value);
     localStorage.setItem('ip_address', ip_address.value);
   }
-  window.onload = function() {
-    var input_id = document.getElementById("input_id");
-    input_id.focus();
+  function toggleFocus(el)
+  {
+    el.style.backgroundColor =  el.style.backgroundColor=="pink" ? "lavender" : "pink";
+  }
 
+  window.onload = function() {
     var bus_id = document.getElementById("bus_id");
+    var input_id = document.getElementById("input_id");
+    var abd_id = document.getElementById("abd_id");
+    var brest_id = document.getElementById("brest_id");
+    var manual_id = document.getElementById("manual_id");
     var ip_address = document.getElementById("ip_address");
+    var clear_btn = document.getElementById("clear_btn");
+    var forms = document.getElementsByName("input_form");
+
+    abd_btn.addEventListener("click",function(){
+      abd_btn.style.backgroundColor = "deepskyblue";
+      brest_btn.style.backgroundColor = "darkgray";
+      CreatePatientID();
+    });
+    brest_btn.addEventListener("click",function(){
+      input_id.focus();
+      CreatePatientID();
+    });
+    abd_btn.addEventListener("click",function(){
+      input_id.focus();
+      CreatePatientID();
+    });
+    clear_btn.addEventListener("click",function(){
+      input_id.value='';
+      input_id.focus();
+      CreatePatientID();
+    });
+
+    bus_id.style.backgroundColor="lavender";
+    input_id.style.backgroundColor="lavender";
+    abd_id.style.backgroundColor="lavender";
+    brest_id.style.backgroundColor="lavender";
+    manual_id.style.backgroundColor="lavender";
+    input_id.focus();
 
     if(localStorage.getItem('bus_id')) {
       bus_id.value = localStorage.getItem('bus_id');
