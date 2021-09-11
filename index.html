@@ -26,51 +26,55 @@
 <body bgcolor="#303030" text="#cccccc" tabindex="-1">
   <p>
     装置番号
-    <input type="number" id="bus_id" min="0" max="99" value='' style="width:2em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="number" id="bus_id" min="0" max="99" value='' style="width:2em;" oninput="ChangeSettings();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
   </p>
   <p>
     受付番号
-    <input type="number" id="input_id" min="0" max="99999" value='' style="width:5em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
-    <input type="button" id="clear_btn" value="×" style="width:50px;" tabindex="-1">
+    <input type="number" id="input_id" min="0" max="99999" value='' style="width:5em;height:2em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="button" id="clear_btn" value="×" style="width:3em;height:2em;" tabindex="-1">
   </p>
   <p>
-    <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
+    <form method="get" name="input_form" target="hidenframe">
       <input type="submit" id="abd_btn" value="腹部(A)" style="width:15em;height:3em;background-color:deepskyblue;text-align:left;" tabindex="-1">
       <input type="text" name="id" id="abd_id" style="display: none;" tabindex="-1"">
     </form>
 
-    <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
-      <input type="submit" id="brest_btn" value="乳腺(B)" style="width:15em;height:3em;background-color:lightcoral;text-align:left;"  tabindex="-1">
+    <form method="get" name="input_form" target="hidenframe">
+      <input type="submit" id="brest_btn" value="乳腺(B)" style="width:15em;height:3em;background-color:lightcoral;text-align:left;" tabindex="-1">
       <input type="text" name="id" id="brest_id" style="display: none;" tabindex="-1">
     </form>
 
-    <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
+    <form method="get" name="input_form" target="hidenframe">
       <p>
         手動入力
-        <input type="text" name="id" id="manual_id" style="fond-size:0.8em;height:0.8em;width:10em;"  onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
-        <input type="submit" id="manual_btn" value="送信" style="width:4em; height:2em;" tabindex="-1" >
-      </p>          
+        <input type="text" name="id" id="manual_id"               style="font-size:1em;height:1em;width:10em;margin-right:0px;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+        <input type="submit"         id="manual_btn" value="送信" style="font-size:1em;height:2em;width: 4em;margin-leftt:0px;" tabindex="-1" >
+      </p>
     </form>
     <HR>
-    IP Address <input type="text" id="ip_address" oninput="CreatePatientID();" style="font-size:1em;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    IP Address <input type="text" id="ip_address" oninput="ChangeSettings();" style="font-size:1em;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
 
   </p>
 
   <script>
-  function CreatePatientID() {
-    // input要素を取得
-    var abd_btn = document.getElementById("abd_btn");
-    var brest_btn = document.getElementById("brest_btn");
-    var bus_id = document.getElementById("bus_id");
-    var input_id = document.getElementById("input_id");
-    var abd_id = document.getElementById("abd_id");
-    var brest_id = document.getElementById("brest_id");
-    var manual_id = document.getElementById("manual_id");
-    var ip_address = document.getElementById("ip_address");
-    var forms = document.getElementsByName("input_form");
+  var abd_btn = document.getElementById("abd_btn");
+  var brest_btn = document.getElementById("brest_btn");
+  var bus_id = document.getElementById("bus_id");
+  var input_id = document.getElementById("input_id");
+  var abd_id = document.getElementById("abd_id");
+  var brest_id = document.getElementById("brest_id");
+  var manual_id = document.getElementById("manual_id");
+  var ip_address = document.getElementById("ip_address");
+  var forms = document.getElementsByName("input_form");
+  function ChangeSettings() {
     for(var i = 0; i < forms.length; i++){
       forms[i].action = "http://"+ip_address.value+":8123/hs1/";
     }
+    localStorage.setItem('ip_address', ip_address.value);
+    localStorage.setItem('bus_id', bus_id.value);
+    CreatePatientID();
+  }
+  function CreatePatientID() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -79,12 +83,10 @@
     bus_id.value = ( '00' + bus_id.value ).slice( -2 );
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
 
-    abd_id.value = today + 'A' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    abd_id.value = today + 'A' +bus_id.value+'-'+input_id.value;
     abd_btn.value = "腹部(A)：" + abd_id.value;
-    brest_id.value = today + 'B' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    brest_id.value = today + 'B' +bus_id.value+'-'+input_id.value;
     brest_btn.value = "乳腺(B)：" + brest_id.value;
-    localStorage.setItem('bus_id', bus_id.value);
-    localStorage.setItem('ip_address', ip_address.value);
   }
   function toggleFocus(el)
   {
@@ -92,16 +94,6 @@
   }
 
   window.onload = function() {
-    var bus_id = document.getElementById("bus_id");
-    var input_id = document.getElementById("input_id");
-    var abd_id = document.getElementById("abd_id");
-    var brest_id = document.getElementById("brest_id");
-    var manual_id = document.getElementById("manual_id");
-    var ip_address = document.getElementById("ip_address");
-    var clear_btn = document.getElementById("clear_btn");
-    var manual_btn = document.getElementById("manual_btn");
-    var forms = document.getElementsByName("input_form");
-
     clear_btn.style.backgroundColor = "lavender";
     manual_btn.style.backgroundColor = "lavender";
 
@@ -140,7 +132,7 @@
     if(localStorage.getItem('ip_address')) {
       ip_address.value = localStorage.getItem('ip_address');
     }
-    CreatePatientID();
+    ChangeSettings();
   }
   </Script>
   <iframe name="hidenframe" style="display:none"></iframe>
