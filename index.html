@@ -9,13 +9,13 @@
   <title>SONIMAGE HS1</title>
   <style>
   body{
-    font-size:40px
+    font-size:30px;
     margin:0px;
     padding:0px;
   }
   input {
     font-size:50px;
-    margin:0px;
+    margin:5px;
     padding:0px;
     height:1.5em;
     -webkit-appearance: none;
@@ -26,41 +26,41 @@
 <body bgcolor="#303030" text="#cccccc" tabindex="-1">
   <p>
     装置番号
-    <input type="number" id="bus_id" min="0" max="99" value='' style="width:80px" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="number" id="bus_id" min="0" max="99" value='' style="width:2em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
   </p>
   <p>
     受付番号
-    <input type="number" id="input_id" min="0" max="99999" value='' style="width:150px;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="number" id="input_id" min="0" max="99999" value='' style="width:5em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
     <input type="button" id="clear_btn" value="×" style="width:50px;" tabindex="-1">
   </p>
   <p>
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
-      <input type="submit" id="abd_btn" value="腹部(A)" style="width:5em;height:2em;background-color:deepskyblue;" tabindex="-1">
-      <input type="text" name="id" id="abd_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px;" oninput="CreatePatientID();" tabindex="-1" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+      <input type="submit" id="abd_btn" value="腹部(A)" style="width:15em;height:2em;background-color:deepskyblue;text-align:left;" tabindex="-1">
+      <input type="text" name="id" id="abd_id" style="display: none;" tabindex="-1"">
     </form>
 
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
-      <input type="submit" id="brest_btn" value="乳腺(B)" style="width:5em;height:2em;background-color:lightcoral;" tabindex="-1">
-      <input type="text" name="id" id="brest_id" style="width:230px;background-color:#303030;color:#C0C0C0;font-size:25px; oninput="CreatePatientID();" tabindex="-1" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+      <input type="submit" id="brest_btn" value="乳腺(B)" style="width:15em;height:2em;background-color:lightcoral;text-align:left;"  tabindex="-1">
+      <input type="text" name="id" id="brest_id" style="display: none;" tabindex="-1">
     </form>
 
     <form method="get" name="input_form" action="http://192.168.1.39:8123/hs1/" target="hidenframe">
       <p>
         手動入力
-      </p>
-      <p>
-        <input type="text" name="id" id="manual_id" style="width:230px;font-size:25px;">
-        <input type="submit" value="送信" onmousedown="preventFocus();" style="width:80px; height:70px;font-size:27px;" tabindex="-1">
+        <input type="text" name="id" id="manual_id" style="fond-size:0.8em;height:0.8em;width:10em;"  onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+        <input type="submit" id="manual_btn" value="送信" style="width:4em; height:2em;" tabindex="-1" >
       </p>          
     </form>
     <HR>
-    IP Address <input type="text" id="ip_address" oninput="CreatePatientID();" style="font-size:16px;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    IP Address <input type="text" id="ip_address" oninput="CreatePatientID();" style="font-size:1em;" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
 
   </p>
 
   <script>
   function CreatePatientID() {
     // input要素を取得
+    var abd_btn = document.getElementById("abd_btn");
+    var brest_btn = document.getElementById("brest_btn");
     var bus_id = document.getElementById("bus_id");
     var input_id = document.getElementById("input_id");
     var abd_id = document.getElementById("abd_id");
@@ -80,13 +80,15 @@
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
 
     abd_id.value = today + 'A' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    abd_btn.value = "腹部(A)：" + abd_id.value;
     brest_id.value = today + 'B' +( '00' + bus_id.value ).slice( -2 )+'-'+( '00000' + input_id.value ).slice( -5 );
+    brest_btn.value = "乳腺(B)：" + brest_id.value;
     localStorage.setItem('bus_id', bus_id.value);
     localStorage.setItem('ip_address', ip_address.value);
   }
   function toggleFocus(el)
   {
-    el.style.backgroundColor =  el.style.backgroundColor=="pink" ? "lavender" : "pink";
+    el.style.backgroundColor =  el.style.backgroundColor=="yellow" ? "lavender" : "yellow";
   }
 
   window.onload = function() {
@@ -97,16 +99,14 @@
     var manual_id = document.getElementById("manual_id");
     var ip_address = document.getElementById("ip_address");
     var clear_btn = document.getElementById("clear_btn");
+    var manual_btn = document.getElementById("manual_btn");
     var forms = document.getElementsByName("input_form");
 
     abd_btn.addEventListener("click",function(){
-      abd_btn.style.backgroundColor = "deepskyblue";
-      brest_btn.style.backgroundColor = "darkgray";
-      CreatePatientID();
+      input_id.focus();
     });
     brest_btn.addEventListener("click",function(){
       input_id.focus();
-      CreatePatientID();
     });
     abd_btn.addEventListener("click",function(){
       input_id.focus();
@@ -117,12 +117,17 @@
       input_id.focus();
       CreatePatientID();
     });
+    manual_btn.addEventListener("click",function(){
+      input_id.focus();
+      CreatePatientID();
+    });
 
     bus_id.style.backgroundColor="lavender";
     input_id.style.backgroundColor="lavender";
     abd_id.style.backgroundColor="lavender";
     brest_id.style.backgroundColor="lavender";
     manual_id.style.backgroundColor="lavender";
+    ip_address.style.backgroundColor="lavender";
     input_id.focus();
 
     if(localStorage.getItem('bus_id')) {
