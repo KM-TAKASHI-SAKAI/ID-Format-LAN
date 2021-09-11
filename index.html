@@ -83,6 +83,9 @@
 
     bus_id.value = ( '00' + bus_id.value ).slice( -2 );
     input_id.value = ( '00000' + input_id.value ).slice( -5 );
+    if( input_id.value.indexOf('.') >= 0 ){
+      input_id.value = ( '00000' );
+    }
 
     abd_id.value = today + 'A' +bus_id.value+'-'+input_id.value;
     abd_btn.value = "腹部(A)：" + abd_id.value;
