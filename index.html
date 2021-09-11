@@ -26,11 +26,11 @@
 <body bgcolor="#303030" text="#cccccc" tabindex="-1">
   <p>
     装置番号
-    <input type="number" id="bus_id" min="0" max="99" value='' style="width:2em;" oninput="ChangeSettings();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="number" inputmode="decimal" id="bus_id" min="0" max="99" value='' style="width:2em;" oninput="ChangeSettings();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
   </p>
   <p>
     受付番号
-    <input type="number" id="input_id" min="0" max="99999" value='' style="width:5em;height:2em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
+    <input type="number" inputmode="decimal" id="input_id" min="0" max="99999" value='' style="width:5em;height:2em;" oninput="CreatePatientID();" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">
     <input type="button" id="clear_btn" value="×" style="width:3em;height:2em;" tabindex="-1">
   </p>
   <p>
